@@ -1,0 +1,34 @@
+{
+    "query": "Orders not showing complete status in POS system",
+    "similar_cases": [
+      {
+        "distance": 0.5577936172485352,
+        "rank": 1,
+        "ticket": {
+          "Close notes": "There was an hybris issue with the business process for the orders from midnight 12 to today 12 PM therefore it cause an issue and orders does not reach FarEye.\nShipment was repushed for the orders from WM.\nOrders has been repushed now.",
+          "Description": "order number not reflect in RP and pos status is showing Invoiced.",
+          "Full description": "order number not reflect in RP and pos status is showing Invoiced.-order number not reflect in RP and pos status is showing Invoiced. - (Critical - System Outage)",
+          "Number": "INC1682000",
+          "Short description": "order number not reflect in RP and pos status is showing Invoiced. - (Critical - System Outage)",
+          "combined_text": "order number not reflect in RP and pos status is showing Invoiced. There was an hybris issue with the business process for the orders from midnight 12 to today 12 PM therefore it cause an issue and orders does not reach FarEye.\nShipment was repushed for the orders from WM.\nOrders has been repushed now.",
+          "group_id": 232,
+          "root_cause": "Order Management Issues"
+        }
+      },
+      {
+        "distance": 0.6046363711357117,
+        "rank": 2,
+        "ticket": {
+          "Close notes": "We have fixed the orders and their status is now updated as pickup complete.\nWe would like to mark the incident as resolved.",
+          "Description": ",  ,  ==> orders pickup complete at POS -> Operation -> Manage order ->search by order number  but status still Ready for Pickup at POS -> order enquiry -> All order -> search by order number==> pls help to check and fix for impacted orders",
+          "Full description": ",  ,  ==> orders pickup complete at POS -> Operation -> Manage order ->search by order number  but status still Ready for Pickup at POS -> order enquiry -> All order -> search by order number==> pls help to check and fix for impacted orders-Orders pickup complete but status still Ready for Pickup",
+          "Number": "INC1666565",
+          "Short description": "Orders pickup complete but status still Ready for Pickup",
+          "combined_text": ",  ,  ==> orders pickup complete at POS -> Operation -> Manage order ->search by order number  but status still Ready for Pickup at POS -> order enquiry -> All order -> search by order number==> pls help to check and fix for impacted orders We have fixed the orders and their status is now updated as pickup complete.\nWe would like to mark the incident as resolved.",
+          "group_id": 4,
+          "root_cause": "Order Management Issues"
+        }
+      }
+    ]
+  }
+  

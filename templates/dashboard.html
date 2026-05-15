@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident AI Agent Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: monospace;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 15px;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        .result h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .result pre {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .loading.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .error {
+            color: #dc3545;
+            padding: 15px;
+            background: #f8d7da;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Incident AI Agent Dashboard</h1>
+        
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('predict')">Predict Root Cause</button>
+                <button class="tab" onclick="showTab('search')">Search Similar Cases</button>
+                <button class="tab" onclick="showTab('preprocess')">Preprocess Logs</button>
+            </div>
+
+            <!-- Predict Tab -->
+            <div id="predict" class="tab-content active">
+                <h2>Predict Root Cause & Generate Summary</h2>
+                <p style="margin-bottom: 15px; color: #666;">Enter an incident description to get root cause prediction, similar cases, and AI-generated summary.</p>
+                <textarea id="predictInput" placeholder="Enter incident description...&#10;Example: Application is not responding after database connection timeout"></textarea>
+                <button onclick="predictRootCause()" id="predictBtn">Analyze Incident</button>
+                <div class="loading" id="predictLoading">Processing... Please wait...</div>
+                <div class="result" id="predictResult" style="display: none;"></div>
+            </div>
+
+            <!-- Search Tab -->
+            <div id="search" class="tab-content">
+                <h2>Search Similar Cases</h2>
+                <p style="margin-bottom: 15px; color: #666;">Search for similar historical incidents based on your query.</p>
+                <textarea id="searchInput" placeholder="Enter search query...&#10;Example: database connection timeout"></textarea>
+                <button onclick="searchSimilar()" id="searchBtn">Search</button>
+                <div class="loading" id="searchLoading">Searching... Please wait...</div>
+                <div class="result" id="searchResult" style="display: none;"></div>
+            </div>
+
+            <!-- Preprocess Tab -->
+            <div id="preprocess" class="tab-content">
+                <h2>Preprocess Logs</h2>
+                <p style="margin-bottom: 15px; color: #666;">Clean and structure raw log data.</p>
+                <textarea id="preprocessInput" placeholder="Enter raw logs...&#10;Example: [ERROR] 2024-01-15 10:30:45 Connection timeout to database"></textarea>
+                <button onclick="preprocessLogs()" id="preprocessBtn">Preprocess</button>
+                <div class="loading" id="preprocessLoading">Processing... Please wait...</div>
+                <div class="result" id="preprocessResult" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        async function predictRootCause() {
+            const input = document.getElementById('predictInput').value;
+            if (!input.trim()) {
+                alert('Please enter an incident description');
+                return;
+            }
+
+            const btn = document.getElementById('predictBtn');
+            const loading = document.getElementById('predictLoading');
+            const result = document.getElementById('predictResult');
+
+            btn.disabled = true;
+            loading.classList.add('active');
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description: input })
+                });
+
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <h3>Analysis Results</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                result.style.display = 'block';
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                result.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+
+        async function searchSimilar() {
+            const input = document.getElementById('searchInput').value;
+            if (!input.trim()) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            const btn = document.getElementById('searchBtn');
+            const loading = document.getElementById('searchLoading');
+            const result = document.getElementById('searchResult');
+
+            btn.disabled = true;
+            loading.classList.add('active');
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: input })
+                });
+
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <h3>Similar Cases</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                result.style.display = 'block';
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                result.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+
+        async function preprocessLogs() {
+            const input = document.getElementById('preprocessInput').value;
+            if (!input.trim()) {
+                alert('Please enter raw logs');
+                return;
+            }
+
+            const btn = document.getElementById('preprocessBtn');
+            const loading = document.getElementById('preprocessLoading');
+            const result = document.getElementById('preprocessResult');
+
+            btn.disabled = true;
+            loading.classList.add('active');
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('/preprocess_logs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ logs: input })
+                });
+
+                const data = await response.json();
+                
+                result.innerHTML = `
+                    <h3>Processed Logs</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                result.style.display = 'block';
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                result.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
