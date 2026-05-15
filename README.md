@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 # Incident AI Agent
 =======
 #AI Powered- IT Incident Agent
->>>>>>> 6952e1dfcab3b44ea68edfde96a8e0917cfd7fa5
-
 **Intelligent Incident Management System Powered by AI**
 
 An AI-powered incident analysis platform that combines machine learning, vector search, and large language models to automate root cause prediction, find similar historical cases, and generate actionable summaries for IT incidents.
@@ -378,7 +375,6 @@ incident_ai_agent/
    pip install flask flask-cors river sentence-transformers faiss-cpu google-generativeai
    ```
 
-<<<<<<< HEAD
 ### Environment Variable Setup
 
 Create a `.env` file in the project root (optional, as API key is currently in code):
@@ -670,24 +666,7 @@ Contributions are welcome! Please follow these guidelines:
 - Test changes before submitting PRs
 - Keep dependencies updated in `requirements.txt`
 
-<<<<<<< HEAD
----
 
-## License
-
-This project is provided as-is for educational and research purposes. Please check with the original repository for specific licensing information.
-
----
-=======
->>>>>>> 6952e1dfcab3b44ea68edfde96a8e0917cfd7fa5
-
-## Additional Notes
-
-### Known Limitations
-
-- **API Quota**: Google Gemini free tier has rate limits; consider upgrading for production use
-- **Model Size**: FAISS index and ML models can be large; ensure sufficient disk space
-- **Single-threaded**: Current implementation is not optimized for high concurrency
 
 ### Future Enhancements
 
