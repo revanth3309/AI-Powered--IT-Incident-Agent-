@@ -20,7 +20,7 @@ An AI-powered incident analysis platform that combines machine learning, vector 
 - [Configuration](#configuration)
 - [API Reference](#api-reference)
 - [Contributing](#contributing)
-- [License](#license)
+  
 
 ---
 
@@ -375,18 +375,6 @@ incident_ai_agent/
    pip install flask flask-cors river sentence-transformers faiss-cpu google-generativeai
    ```
 
-### Environment Variable Setup
-
-Create a `.env` file in the project root (optional, as API key is currently in code):
-
-```env
-GEMINI_API_KEY=your_google_gemini_api_key_here
-```
-
-**Note**: Currently, the API key is hardcoded in `models/summarizer.py`. For production use, move this to environment variables.
-
-=======
->>>>>>> 6952e1dfcab3b44ea68edfde96a8e0917cfd7fa5
 ### Running the Ingestion Pipeline
 
 To build or rebuild the vector index from historical data:
